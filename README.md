@@ -3,6 +3,6 @@
 - [x] Merchant
 - [x] Driver
 - [x] Store
-- [ ] Store Menu
+- [x] Store Menu
 - [ ] Orders
 - [ ] Orders Menu
