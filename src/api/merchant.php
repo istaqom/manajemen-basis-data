@@ -5,7 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/merchant', function (Request $request, Response $response, $args) {
-    $sql = "SELECT *  from merchant";
+    $sql = "CALL show_merchant()";
 
     try {
         $db = new DB();
@@ -32,13 +32,12 @@ $app->get('/merchant', function (Request $request, Response $response, $args) {
 
 $app->get('/merchant/{id}', function (Request $request, Response $response, $args) {
     $id_merchant = $request->getAttribute('id');
-    $sql = "SELECT * FROM merchant WHERE id = ?";
+    $sql = "SELECT * FROM merchant WHERE id = $id_merchant";
 
     try {
         $db = new DB();
         $conn = $db->connect();
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("i", $id_merchant);
+        $stmt = $conn->query($sql);
         $customers = $stmt->fetchAll(PDO::FETCH_OBJ);
         $db = null;
 
@@ -115,10 +114,10 @@ $app->put('/merchant/{id}', function (Request $request, Response $response, arra
         $stmt = $conn->prepare($sql);
 
         $result = $stmt->execute([
-            ':start_time' => $username,
-            ':end_time' => $password,
-            ':active' => $name,
-            ':id_merchant' => $id_merchant,
+            ':name' => $name,
+            ':username' => $username,
+            ':password' => $password,
+            ':id_merchant' => $id_merchant
         ]);
 
         $db = null;
@@ -142,7 +141,6 @@ $app->put('/merchant/{id}', function (Request $request, Response $response, arra
 $app->delete('/merchant/{id}', function (Request $request, Response $response, array $args) {
     $id_user = $request->getAttribute('id');
 
-    // $sql = "DELETE FROM user WHERE id = $id_user";
     $sql = "CALL delete_merchant(?)";
 
     try {

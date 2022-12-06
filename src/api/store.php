@@ -32,13 +32,12 @@ $app->get('/store', function (Request $request, Response $response, $args) {
 
 $app->get('/store/{id}', function (Request $request, Response $response, $args) {
     $id_store = $request->getAttribute('id');
-    $sql = "SELECT * FROM store WHERE id = ?";
+    $sql = "SELECT * FROM store WHERE id = $id_store";
 
     try {
         $db = new DB();
         $conn = $db->connect();
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("i", $id_store);
+        $stmt = $conn->query($sql);
         $customers = $stmt->fetchAll(PDO::FETCH_OBJ);
         $db = null;
 
@@ -62,8 +61,10 @@ $app->post('/store', function (Request $request, Response $response, array $args
     $data = $request->getParsedBody();
     $merchant = $data['merchant_id'];
     $name = $data["name"];
+    $start_time = $data["start_time"];
+    $end_time = $data["end_time"];
 
-    $sql = "SET @p3 = ''; CALL insert_store(:merchant_id, :name, @p3)";
+    $sql = "SET @p3 = ''; CALL insert_store(:merchant_id, :name, :start_time, :end_time, @p3)";
 
     try {
         $db = new DB();
@@ -72,7 +73,9 @@ $app->post('/store', function (Request $request, Response $response, array $args
         $stmt = $conn->prepare($sql);
         $result = $stmt->execute([
             ':merchant_id' => $merchant,
-            ':name' => $name
+            ':name' => $name,
+            ':start_time' => $start_time,
+            ':end_time' => $end_time
         ]);
 
         $db = null;
@@ -96,11 +99,13 @@ $app->put('/store/{id}', function (Request $request, Response $response, array $
     $id_store = $request->getAttribute('id');
 
     $data = $request->getParsedBody();
+    $name = $data['name'];
     $start_time = $data["start_time"];
     $end_time = $data["end_time"];
     $active = $data["active"];
 
-    $sql = "UPDATE store SET 
+    $sql = "UPDATE store SET
+            name = :name, 
             start_time = :start_time, 
             end_time = :end_time, 
             active = :active 
@@ -113,6 +118,7 @@ $app->put('/store/{id}', function (Request $request, Response $response, array $
         $stmt = $conn->prepare($sql);
 
         $result = $stmt->execute([
+            ':name' => $name,
             ':start_time' => $start_time,
             ':end_time' => $end_time,
             ':active' => $active,
