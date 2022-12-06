@@ -5,4 +5,4 @@
 - [x] Store
 - [x] Store Menu
 - [x] Orders
-- [ ] Orders Menu
+- [x] Orders Menu
