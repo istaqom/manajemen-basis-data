@@ -16,5 +16,6 @@ $app->get('/', function (Request $request, Response $response, $args) {
 });
 
 include_once "../src/api/user.php";
+include_once "../src/api/driver.php";
 
 $app->run();
