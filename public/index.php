@@ -21,5 +21,6 @@ include_once "../src/api/merchant.php";
 include_once "../src/api/store.php";
 include_once "../src/api/store_menu.php";
 include_once "../src/api/orders.php";
+include_once "../src/api/orders_menu.php";
 
 $app->run();
