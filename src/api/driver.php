@@ -5,7 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/driver', function (Request $request, Response $response, $args) {
-    $sql = "CALL show_driver()";
+    $sql = "CALL show_all_driver()";
 
     try {
         $db = new DB();
@@ -32,7 +32,7 @@ $app->get('/driver', function (Request $request, Response $response, $args) {
 
 $app->get('/driver/{id}', function (Request $request, Response $response, $args) {
     $id_driver = $request->getAttribute('id');
-    $sql = "SELECT * FROM driver WHERE id = $id_driver";
+    $sql = "CALL show_driver($id_driver)";
 
     try {
         $db = new DB();
