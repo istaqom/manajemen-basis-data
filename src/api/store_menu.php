@@ -94,28 +94,28 @@ $app->post('/store_menu', function (Request $request, Response $response, array 
     }
 });
 
-$app->put('/user/{id}', function (Request $request, Response $response, array $args) {
+$app->put('/store_menu/{id}', function (Request $request, Response $response, array $args) {
     $id_user = $request->getAttribute('id');
 
     $data = $request->getParsedBody();
-    $name = $data["name"];
-    $username = $data["username"];
-    $password = $data["password"];
 
-    $sql = "UPDATE user SET 
+    $store_id = $data["store_id"];
+    $name = $data["name"];
+    $unit_price = $data["unit_price"];
+
+    $sql = "UPDATE store_menu SET 
             name = :name, 
-            username = :username, 
-            password = :password 
-            WHERE id = $id_user";
+            unit_price = :unit_price
+            WHERE id = :store_id";
 
     try {
         $db = new DB();
         $conn = $db->connect();
 
         $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':store_id', $store_id);
         $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':unit_price', $unit_price);
 
         $result = $stmt->execute();
 
@@ -137,11 +137,10 @@ $app->put('/user/{id}', function (Request $request, Response $response, array $a
     }
 });
 
-$app->delete('/user/{id}', function (Request $request, Response $response, array $args) {
+$app->delete('/store_menu/{id}', function (Request $request, Response $response, array $args) {
     $id_user = $request->getAttribute('id');
 
-    // $sql = "DELETE FROM user WHERE id = $id_user";
-    $sql = "CALL delete_user($id_user)";
+    $sql = "CALL delete_store_menu($id_user)";
 
     try {
         $db = new DB();
