@@ -1,4 +1,5 @@
 <?php
+
 use App\Models\DB;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -13,7 +14,7 @@ $app->get('/driver', function (Request $request, Response $response, $args) {
         $customers = $stmt->fetchAll(PDO::FETCH_OBJ);
         $db = null;
 
-        $response->getBody()->write(json_encode($customers));
+        $response->getBody()->write(json_encode(['data' => $customers]));
         return $response
             ->withHeader('content-type', 'application/json')
             ->withStatus(200);
