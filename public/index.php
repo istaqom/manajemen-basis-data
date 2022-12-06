@@ -20,5 +20,6 @@ include_once "../src/api/driver.php";
 include_once "../src/api/merchant.php";
 include_once "../src/api/store.php";
 include_once "../src/api/store_menu.php";
+include_once "../src/api/orders.php";
 
 $app->run();
