@@ -5,7 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app->get('/user', function (Request $request, Response $response, $args) {
-    $sql = "CALL show_user()";
+    $sql = "CALL show_all_user()";
 
     try {
         $db = new DB();
@@ -32,7 +32,7 @@ $app->get('/user', function (Request $request, Response $response, $args) {
 
 $app->get('/user/{id}', function (Request $request, Response $response, $args) {
     $id_user = $request->getAttribute('id');
-    $sql = "SELECT * FROM user WHERE id = $id_user";
+    $sql = "CALL show_user($id_user)";
 
     try {
         $db = new DB();
@@ -101,17 +101,14 @@ $app->put('/user/{id}', function (Request $request, Response $response, array $a
     $username = $data["username"];
     $password = $data["password"];
 
-    $sql = "UPDATE user SET 
-            name = :name, 
-            username = :username, 
-            password = :password 
-            WHERE id = $id_user";
+    $sql = "CALL update_user(:id, :name, :username, :password)";
 
     try {
         $db = new DB();
         $conn = $db->connect();
 
         $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id_user);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':password', $password);
@@ -139,7 +136,6 @@ $app->put('/user/{id}', function (Request $request, Response $response, array $a
 $app->delete('/user/{id}', function (Request $request, Response $response, array $args) {
     $id_user = $request->getAttribute('id');
 
-    // $sql = "DELETE FROM user WHERE id = $id_user";
     $sql = "CALL delete_user($id_user)";
 
     try {
