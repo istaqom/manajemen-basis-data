@@ -4,8 +4,8 @@ use App\Models\DB;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-$app->get('/user', function (Request $request, Response $response, $args) {
-    $sql = "CALL show_user()";
+$app->get('/store_menu', function (Request $request, Response $response, $args) {
+    $sql = "CALL show_all_store_menu()";
 
     try {
         $db = new DB();
@@ -30,9 +30,9 @@ $app->get('/user', function (Request $request, Response $response, $args) {
     }
 });
 
-$app->get('/user/{id}', function (Request $request, Response $response, $args) {
-    $id_user = $request->getAttribute('id');
-    $sql = "SELECT * FROM user WHERE id = $id_user";
+$app->get('/store_menu/{id}', function (Request $request, Response $response, $args) {
+    $id_store_menu = $request->getAttribute('id');
+    $sql = "SELECT * FROM store_menu WHERE id = $id_store_menu";
 
     try {
         $db = new DB();
@@ -57,22 +57,23 @@ $app->get('/user/{id}', function (Request $request, Response $response, $args) {
     }
 });
 
-$app->post('/user', function (Request $request, Response $response, array $args) {
+$app->post('/store_menu', function (Request $request, Response $response, array $args) {
     $data = $request->getParsedBody();
-    $name = $data["name"];
-    $username = $data["username"];
-    $password = $data["password"];
 
-    $sql = "SET @p3 = ''; CALL insert_user(:name, :username, :password, @p3)";
+    $store_id = $data["store_id"];
+    $name = $data["name"];
+    $unit_price = $data["unit_price"];
+
+    $sql = "CALL insert_store_menu(:store_id, :name, :unit_price)";
 
     try {
         $db = new DB();
         $conn = $db->connect();
 
         $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':store_id', $store_id);
         $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':unit_price', $unit_price);
 
         $result = $stmt->execute();
 
