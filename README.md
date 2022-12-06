@@ -1,7 +1,7 @@
 ## Table API
 - [x] User
 - [ ] Merchant
-- [ ] Driver
+- [x] Driver
 - [ ] Store
 - [ ] Store Menu
 - [ ] Orders Menu
